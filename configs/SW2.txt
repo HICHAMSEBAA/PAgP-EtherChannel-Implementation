@@ -1,0 +1,30 @@
+
+!HostName
+ hostname SW2
+!
+! Define Layer 2 VLAN
+vlan 10
+ name Servers_And_Clients
+!
+! Client Access Interfaces
+interface range GigabitEthernet1/0 - 2
+ description Access Ports for Debian PCs (.11 - .13)
+ switchport mode access
+ switchport access vlan 10
+ spanning-tree portfast
+!
+! Physical PAgP Trunk Member Interfaces
+interface range GigabitEthernet0/0 - 3
+ description PAgP Member to S1
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport nonegotiate
+ channel-group 1 mode auto non-silent
+!
+! Logical EtherChannel Interface
+interface Port-channel 1
+ description Bundled PAgP Link to S1
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport nonegotiate
+ switchport trunk allowed vlan 10

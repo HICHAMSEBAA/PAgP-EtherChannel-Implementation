@@ -1,0 +1,33 @@
+
+!HostName
+ hostname SW1
+!
+! Define Layer 2 VLAN
+vlan 10
+ name Servers_And_Clients
+!
+! Server Access Interface
+interface GigabitEthernet1/0
+ description Host: Linux_Ubuntu_Server (.10)
+ switchport mode access
+ switchport access vlan 10
+ spanning-tree portfast
+!
+! Physical PAgP Trunk Member Interfaces
+interface range GigabitEthernet0/0 - 3
+ description PAgP Member to S2
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport nonegotiate
+ channel-group 1 mode desirable non-silent
+!
+! Logical EtherChannel Interface
+interface Port-channel 1
+ description Bundled PAgP Link to S2
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport nonegotiate
+ switchport trunk allowed vlan 10
+!
+! Optimize Outbound Hashing for Single Source Server
+port-channel load-balance dst-ip
